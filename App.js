@@ -15,11 +15,15 @@ const Reply = require('./Models/Reply');
 const Request = require('./Models/Request');
 ////////////////////////////////////////////////////////////////////
 
-//ENVIROMENT VARIABLES
+///////////////////////////////Import Routers///////////////////////////////////////
+const LoginRouter = require('./Routes/Login.Routes');
+
+/////////////////////////////////ENVIROMENT VARIABLES//////////////////////////////////////
 require('dotenv').config();
 
 const App = express();
 App.use(express.urlencoded({ extended: false }));
+App.use(express.static(path.join(__dirname, "public")));
 
 App.engine('hbs', handlebars.engine({
     layoutsDir: 'Views/Layout/',
@@ -31,8 +35,11 @@ App.engine('hbs', handlebars.engine({
 App.set('view engine', "hbs");
 App.set('views', 'views');
 
+////Set Routes to the APP/////////////////////
+App.use(LoginRouter);
+///////////////////////////////////////////////////
 
-//Entities Relationships
+////////////////////////Entities Relationships//////////////////////////////////////////////////
 Publication.belongsTo(User, { constraint: true, onDelete: "CASCADE" });
 Comment.belongsTo(User, { constraint: true, onDelete: "CASCADE" });
 Reply.belongsTo(User, { constraint: true, onDelete: "CASCADE" });
@@ -42,10 +49,10 @@ User.hasMany(Publication);
 User.hasMany(Comment);
 User.hasMany(Reply);
 User.hasMany(Request);
+//////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-//Init ORM [CHECK CONSOLE FOR QUERIES]
+/////////////////////Init ORM [CHECK CONSOLE FOR QUERIES]/////////////////////////////////////////
 sequelize.sync()
     .then(() => {
         App.listen(process.env.PORT, () => {
