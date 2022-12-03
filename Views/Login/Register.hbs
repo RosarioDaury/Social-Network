@@ -2,13 +2,18 @@
     <div class="form d-flex flex-column justify-content-center align-items-center">
         <form action="/post/register" method="post" class="d-flex flex-column justify-content-center align-items-center" style="width: 40%;">
             <h3>Registration Form</h3>
+            {{#if hasRegisterErrors}}
+                {{#each RegisterErrors}}
+                    <p class="text-danger">{{this}}</p>
+                {{/each}}
+            {{/if}}
             <br>
             <br>
-            <input type="text" class="form-control mb-2" placeholder="First Name" name="username">
-            <input type="text" class="form-control mb-2" placeholder="Last Name" name="username">
-            <input type="text" class="form-control mb-2" placeholder="Email" name="username">
-            <input type="text" class="form-control mb-2" placeholder="Password" name="username">
-            <input type="text" class="form-control mb-5" placeholder="Confirm Password" name="username">
+            <input type="text" class="form-control mb-2" placeholder="First Name" name="firstName" required>
+            <input type="text" class="form-control mb-2" placeholder="Last Name" name="lastName" required>
+            <input type="email" class="form-control mb-2" placeholder="Email (Username)" name="username">
+            <input type="text" class="form-control mb-2" placeholder="Password" name="password">
+            <input type="text" class="form-control mb-5" placeholder="Confirm Password" name="password1">
             <input type="submit"  class="btn btn-success mb-2" value="Create Account">
             <a href='/login' class="btn btn-primary button">Back to Login</a>
         </form>
