@@ -1,0 +1,60 @@
+<br>
+<div class="form d-flex flex-column justify-content-center align-items-left" style="width: 50%; margin: auto;">
+                    <form enctype="multipart/form-data" action="/post/edit" method="post" class="d-flex flex-column justify-content-center align-items-left" style="color: white;">
+                        <h5>Publish Something</h5>
+                        <textarea class="form-control" placeholder="Write Here your caption" name="text">{{publication.text}}
+                        </textarea>
+                        <input type="hidden" name="id" value="{{publication.id}}">
+                        <input type="hidden" name="userId" value="{{publication.userId}}">
+                        <input type='file' class="form-control mb-2" name="image">
+                        <input type="submit"  class="btn btn-primary" value="Edit Post" style="width: 100%;">
+                        <a href="/Home" class="btn btn-secondary">Back Home</a>
+                    </form>
+</div>
+ 
+<br>
+
+{{#if (HasPhoto publication)}}
+<div class="d-flex flex-column post-container-justText" style="width: 50%;">
+                            <div class="d-flex flex-row justify-content-start post-header">
+                                <img src="{{publication.user.dataValues.photo}}" alt="profile" class="profile_photo_post">
+                                <div>
+                                    <p><b>{{publication.user.dataValues.username}}</b></p>
+                                    <p style="font-size: 10px;">{{publication.createdAt}}</p>
+                                </div>
+                                
+                                <div style="margin-left: 1rem">
+                                    <a href="delete/post/{{publication.id}}" class="btn btn-danger" >Delete</a>
+                                    <a href="edit/post/{{publication.id}}" class="btn btn-secondary" >Edit</a>
+                                </div>
+                            </div>
+                            
+                            <div style="padding: 5px;">
+                                <p>
+                                    {{publication.text}}
+                                </p>
+                            </div>
+                        
+                        {{#if publication.image}}
+                            <div class="post_image">
+                                <img src="/{{publication.image}}" alt="photo">
+                            </div>
+                        {{/if}}
+</div>
+{{else}}
+<div class="d-flex flex-column post-container-justText"  style="width: 50%;">
+                            <div class="d-flex flex-row justify-content-start post-header">
+                                <img src="{{publication.user.dataValues.photo}}" alt="profile" class="profile_photo_post">
+                                <div>
+                                    <p><b>{{publication.user.dataValues.username}}</b></p>
+                                    <p style="font-size: 10px;">{{publication.createdAt}}</p>
+                                </div>
+
+                            </div>
+                            <div class="text-public" >
+                                <h3>{{publication.text}}</h3>
+                                <br>
+                            </div>
+</div>
+{{/if}}
+ 

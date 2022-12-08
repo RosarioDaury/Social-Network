@@ -1,6 +1,6 @@
 <div class="container">
     <div class="form d-flex flex-column justify-content-center align-items-center">
-        <form action="/post/register" method="post" class="d-flex flex-column justify-content-center align-items-center" style="width: 40%;">
+        <form enctype="multipart/form-data" action="/post/register" method="post" class="d-flex flex-column justify-content-center align-items-center" style="width: 40%;">
             <h3>Registration Form</h3>
             {{#if hasRegisterErrors}}
                 {{#each RegisterErrors}}
@@ -11,9 +11,12 @@
             <br>
             <input type="text" class="form-control mb-2" placeholder="First Name" name="firstName" required>
             <input type="text" class="form-control mb-2" placeholder="Last Name" name="lastName" required>
-            <input type="email" class="form-control mb-2" placeholder="Email (Username)" name="username">
-            <input type="text" class="form-control mb-2" placeholder="Password" name="password">
-            <input type="text" class="form-control mb-5" placeholder="Confirm Password" name="password1">
+            <input type="text" class="form-control mb-2" placeholder="Username" name="username" required>
+            <input type="email" class="form-control mb-2" placeholder="Email" name="email" required>
+            <input type="file" name="image" class="form-control mb-2" required>
+            <input type="text" name="phone" class="form-control mb-2" placeholder="Phone Number" required>
+            <input type="text" class="form-control mb-2" placeholder="Password" name="password" required>
+            <input type="text" class="form-control mb-5" placeholder="Confirm Password" name="password1" required>
             <input type="submit"  class="btn btn-success mb-2" value="Create Account">
             <a href='/login' class="btn btn-primary button">Back to Login</a>
         </form>

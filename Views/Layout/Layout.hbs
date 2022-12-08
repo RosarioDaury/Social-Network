@@ -4,11 +4,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="Login.styles.css">
+    {{#if login}}<link rel="stylesheet" href="/CSS/Login.styles.css">{{/if}}
+    <link rel="stylesheet" href="/CSS/Home.styles.css">
+    {{#if edit}}<link rel="stylesheet" href="/CSS/Edit.styles.css">{{/if}}
     <title>Social Network</title>
   </head>
 
   <body>
+    {{#if home}}
+      <div style="width: 85%; margin: auto;">
+        <nav class="navbar bg-color">
+            <div class="container-fluid" style="color: white;">
+                <h3><a href="#">The Social Network</a></h3>
+                <div class="d-flex justify-content-between" style="width: 40%;">
+                    <a href="#" class="btn btn-primary">Friends</a>
+                    <a href="#" class="btn btn-primary">Notifications</a>
+                    <a href="#" class="btn btn-primary">Events</a>
+                    <a href="/logout" class="btn btn-danger">LogOut</a>
+                </div>
+            </div>
+        </nav>
+    </div>  
+    {{/if}}
 
     {{{body}}}
 

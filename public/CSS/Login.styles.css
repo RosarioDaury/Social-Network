@@ -17,23 +17,34 @@ form, .buttons{
     width: 25%;
 }
 
-input[type='text'], input[type='password'], input[type='email']{
+input[type='text'], input[type='password'], input[type='email'], input[type='file']{
     background-color: rgb(13, 13, 13, .5);
     color: white;
     border: none;
 }
 
-input[type = 'text']::placeholder, input[type = 'password']::placeholder, input[type = 'email']::placeholder{
+input[type = 'text']::placeholder, 
+input[type = 'password']::placeholder, 
+input[type = 'email']::placeholder,
+input[type='file']::placeholder{
     color: white;
 }
 
-input[type='text']:focus, input[type='password']:focus, input[type = 'email']:focus{
+input[type='text']:focus, 
+input[type='password']:focus, 
+input[type = 'email']:focus,
+input[type='file']:focus{
     background-color: rgb(13, 13, 13, .5);
     color: white;
     border: none;
 }
 
-input[type='text'], input[type='submit'], input[type='password'], input[type = 'email'], .button{
+input[type='text'], 
+input[type='submit'], 
+input[type='password'], 
+input[type = 'email'], 
+.button,
+input[type='file']{
     border-radius: 20px;
     width: 100%;
 }

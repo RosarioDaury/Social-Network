@@ -12,4 +12,9 @@ Router.post('/post/login', Controller.PostLoginPage);
 Router.post('/post/register', Controller.PostRegisterPage);
 Router.post('/post/forgotpassword', Controller.PostForgotPasswordPage);
 
+
+Router.get('/confirmAccount/:code', Controller.ActivateAccount);
+
+Router.get('/logout', Controller.LogOut);
+
 module.exports = Router;

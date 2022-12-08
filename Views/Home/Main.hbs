@@ -1,0 +1,272 @@
+<div style="width: 85%; margin: auto;">
+    <div class="d-flex flex-row justify-content-between">
+        <div class="d-flex flex-column" style="width: 27%; background: rgb(52, 73, 94, .8);">
+            <img src="{{user.photo}}" alt="profile" class="profile-photo">
+            <div class="text-center mt-5" style="color: white;">
+                <h4>{{user.firstName}} {{user.lastName}}</h4>
+                <p>{{user.username}}</p>
+                <p>{{user.email}}</p>
+                <p>{{user.phone}}</p>
+            </div>
+            
+        </div>
+        <div class="d-flex flex-column scrollable" style="width: 70%; height: 500px;  ">
+            <br>
+            <div class="container">
+                {{#if hasPublishErrors}}
+                {{#each PublishErrors}}
+                    <p class="text-danger text-center">{{this}}</p>
+                {{/each}}
+            {{/if}}
+                <div class="form d-flex flex-column justify-content-center align-items-left">
+                    <form enctype="multipart/form-data" action="/post/post" method="post" class="d-flex flex-column justify-content-center align-items-left" style="color: white;">
+                        <h5 class="text-center" style="color: black;">Publish Something</h5>
+                        <textarea class="form-control" placeholder="Write Here your caption" name="text" rows="5"></textarea>
+                        <input type='file' class="form-control mb-1" name="image">
+                        <input type="submit"  class="btn btn-primary" value="Publish" style="width: 100%;">
+                    </form>
+                </div>
+                <br>
+                <br>
+
+                {{#each publications}}
+                    {{#if (HasPhoto this)}}
+                        <div class="d-flex flex-column post-container-justText">
+                            <div class="d-flex flex-row justify-content-start post-header">
+                                <img src="{{this.user.dataValues.photo}}" alt="profile" class="profile_photo_post">
+                                <div>
+                                    <p><b>{{this.user.dataValues.username}}</b></p>
+                                    <p style="font-size: 10px;">{{this.createdAt}}</p>
+                                </div>
+                                
+                                <div style="margin-left: 8rem">
+                                    <a href="delete/post/{{this.id}}" class="btn btn-danger" >Delete</a>
+                                    <a href="edit/post/{{this.id}}" class="btn btn-secondary" >Edit</a>
+                                </div>
+                            </div>
+                            
+                            <div style="padding: 5px; margin-left: 10px;">
+                                <p>
+                                    {{this.text}}
+                                </p>
+                                <br>
+                            </div>
+
+                            <div class="post_image">
+                                <img src="/{{this.image}}" alt="photo">
+                            </div>
+
+                            <div class="add_comment">
+                                <form action="/post/comment/{{this.id}}" method="post" class="d-flex flex-row justify-content-center align-items-left ">
+                                    <input type="text" class="form-control mr-2" name="comment" id="comment" placeholder="Write your comment">
+                                    <input type="submit" class="btn btn-secondary" value="Comment">
+                                </form>
+                            </div>
+
+                            <div class="scrollable all_comments">
+                                <div class="d-flex flex-column justify-content-start">
+                                    {{!-- Single Comment --}}
+                                    {{#each ../comments}}
+                                        {{#if (IfEqual this.publicationId ../this.id)}}
+                                            <div class="d-flex flex-row justify-content-start comment">
+                                                <img src="{{this.user.dataValues.photo}}" alt="profile" class="profile_photo_post mt-3" style="margin-right: 10px;">
+                                                <div>
+                                                    <p><b>{{this.user.dataValues.username}}</b></p>
+                                                    <p style="font-size: 10px;">{{this.createdAt}}</p>
+                                                    <p>
+                                                        {{this.text}}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+
+                                            {{#each ../../replies}}
+
+                                                {{#if (IfEqual this.commentId ../this.id)}}
+
+                                                    <div class="add_comment">
+                                                        <div class="d-flex flex-row float-right comment" style="width:80%;">
+                                                            <img src="{{this.user.dataValues.photo}}" alt="profile" class="profile_photo_post mt-3" style="margin-right: 10px;">
+                                                            <div>
+                                                                <p><b>{{this.user.dataValues.username}}</b></p>
+                                                                <p style="font-size: 10px;">{{this.createdAt}}</p>
+                                                                <p>
+                                                                    {{this.text}}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                {{/if}}
+
+                                            {{/each}}
+
+                                            <div class="add_comment">
+                                                <form action="/post/reply/{{this.id}}" method="post" class="d-flex flex-row float-right" style="width:80%;">
+                                                    <input type="text" class="form-control mr-2" name="reply" id="reply" placeholder="Reply Here">
+                                                    <input type="submit" class="btn btn-secondary" value="Reply">
+                                                </form>
+                                            </div>    
+                                            
+                                        {{/if}}
+                                    {{/each}}
+                                </div>
+
+                            </div>
+                        </div>
+                        <br>
+                    {{else}}
+                        <div class="d-flex flex-column post-container-justText">
+                            <div class="d-flex flex-row justify-content-start post-header">
+                                <img src="{{this.user.dataValues.photo}}" alt="profile" class="profile_photo_post">
+                                <div>
+                                    <p><b>{{this.user.dataValues.username}}</b></p>
+                                    <p style="font-size: 10px;">{{this.createdAt}}</p>
+                                </div>
+
+                                 <div style="margin-left: 8rem">
+                                    <a href="delete/post/{{this.id}}" class="btn btn-danger" >Delete</a>
+                                    <a href="edit/post/{{this.id}}" class="btn btn-secondary" >Edit</a>
+                                </div>
+                            </div>
+                            <div class="text-public" >
+                                <h3>{{this.text}}</h3>
+                                <br>
+                            </div>
+
+                            <div class="add_comment">
+                                <form action="/post/comment/{{this.id}}" method="post" class="d-flex flex-row justify-content-center align-items-left ">
+                                    <input type="text" class="form-control mr-2" name="comment" id="comment" placeholder="Write your comment">
+                                    <input type="submit" class="btn btn-secondary" value="Comment">
+                                </form>
+                            </div>
+
+                            <div class="scrollable all_comments">
+                                <div class="d-flex flex-column justify-content-start">
+                                    {{!-- Single Comment --}}
+                                    {{#each ../comments}}
+                                        {{#if (IfEqual this.publicationId ../this.id)}}
+                                            <div class="d-flex flex-row justify-content-start comment">
+                                                <img src="{{this.user.dataValues.photo}}" alt="profile" class="profile_photo_post mt-3" style="margin-right: 10px;">
+                                                <div>
+                                                    <p><b>{{this.user.dataValues.username}}</b></p>
+                                                    <p style="font-size: 10px;">{{this.createdAt}}</p>
+                                                    <p>
+                                                        {{this.text}}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+
+                                            {{#each ../../replies}}
+
+                                                {{#if (IfEqual this.commentId ../this.id)}}
+
+                                                    <div class="add_comment">
+                                                        <div class="d-flex flex-row float-right comment" style="width:80%;">
+                                                            <img src="{{this.user.dataValues.photo}}" alt="profile" class="profile_photo_post mt-3" style="margin-right: 10px;">
+                                                            <div>
+                                                                <p><b>{{this.user.dataValues.username}}</b></p>
+                                                                <p style="font-size: 10px;">{{this.createdAt}}</p>
+                                                                <p>
+                                                                    {{this.text}}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                {{/if}}
+
+                                            {{/each}}
+
+                                            <div class="add_comment">
+                                                <form action="/post/reply/{{this.id}}" method="post" class="d-flex flex-row float-right" style="width:80%;">
+                                                    <input type="text" class="form-control mr-2" name="reply" id="reply" placeholder="Reply Here">
+                                                    <input type="submit" class="btn btn-secondary" value="Reply">
+                                                </form>
+                                            </div>    
+                                            
+                                        {{/if}}
+                                    {{/each}}
+                                </div>
+
+                            </div>
+                        </div>
+                        <br>
+                    {{/if}}
+                {{/each}}
+               
+                <br>
+
+                {{!-- Post card when there is photo --}}
+                {{!-- <div class="d-flex flex-column post-container">
+                    <div class="d-flex flex-row justify-content-start post-header">
+                        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" class="profile_photo_post">
+                        <div>
+                            <p><b>User name</b></p>
+                            <p>Date</p>
+                        </div>
+                    </div>
+
+                    <div style="padding: 5px;">
+                        <p>
+                            This is the text of the comment, right here
+                            and what if i just put more and more and more text idk
+                        </p>
+                    </div>
+
+                    <div class="post_image">
+                        <img src="https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg" alt="photo">
+                    </div>
+
+                    <div class="add_comment">
+                        <form action="" class="d-flex flex-row justify-content-center align-items-left ">
+                            <input type="text" class="form-control mr-2" name="comment" id="comment" placeholder="Write your comment">
+                            <input type="submit" class="btn btn-secondary" value="Comment">
+                        </form>
+                    </div>
+
+                    <div class="scrollable all_comments">
+                        <div class="d-flex flex-row justify-content-start comment">
+                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" class="profile_photo_post mt-3" style="margin-right: 10px;">
+                            <div>
+                                <p><b>User name</b></p>
+                                <p>
+                                    This is the text of the comment, right here
+                                    and what if i just put more and more and more text idk
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="add_comment">
+                                    <div class="d-flex flex-row float-right comment" style="width:80%;">
+                                        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" class="profile_photo_post mt-3" style="margin-right: 10px;">
+                                        <div>
+                                            <p><b>User name</b></p>
+                                            <p>
+                                                This is the text of the comment, right here
+                                                and what if i just put more and more and more text idk
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    <form action="" class="d-flex flex-row float-right" style="width:80%;">
+                                        <input type="text" class="form-control mr-2" name="comment" id="comment" placeholder="Reply Here">
+                                        <input type="submit" class="btn btn-secondary" value="Comment">
+                                    </form>
+                                </div>
+
+                    </div>
+                </div>  --}}
+
+                
+
+                <br>
+                <br>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+

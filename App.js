@@ -19,8 +19,14 @@ const Reply = require('./Models/Reply');
 const Request = require('./Models/Request');
 ////////////////////////////////////////////////////////////////////
 
+////HBS Helpers
+const HasPhoto = require('./Utils/HbsHelpers/HasPhoto');
+const IfEqual = require('./Utils/HbsHelpers/IfEqual');
+
+
 ///////////////////////////////Import Routers///////////////////////////////////////
 const LoginRouter = require('./Routes/Login.Routes');
+const HomeRouter = require('./Routes/Home.Routes');
 
 /////////////////////////////////ENVIROMENT VARIABLES//////////////////////////////////////
 require('dotenv').config();
@@ -29,13 +35,38 @@ const App = express();
 App.use(cookieParser());
 App.use(flash());
 App.use(express.urlencoded({ extended: false }));
-App.use(express.static(path.join(__dirname, "public")));
+App.use(express.static(path.join(__dirname, 'public')));
+
 
 App.engine('hbs', handlebars.engine({
     layoutsDir: 'Views/Layout/',
     defaultLayout: 'Layout',
     extname: 'hbs',
+    helpers: {
+        HasPhoto,
+        IfEqual,
+    }
 }));
+
+//////////////Multer SETUP///////////////////////////
+
+const forFiles = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/Images')
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${uuidv4()}-${file.originalname}`)
+    }
+})
+
+
+App.use(multer({ storage: forFiles }).single('image'))
+
+//Static files location
+
+
+
+////////////////////////////////////////////////////
 
 
 ///Set sesssions////////////////////////
@@ -54,8 +85,12 @@ App.set('views', 'views');
 App.use((req, res, next) => {
     const registerErrors = req.flash('RegisterErrors');
     const loginErrors = req.flash('LoginErrors');
+    const publishErrors = req.flash('PublishErrors')
 
     res.locals.isAuth = req.session.isAuth;
+    res.locals.User = req.session.User;
+
+    // console.log('User', req.session.User);
 
     //Errros for Register Page
     res.locals.RegisterErrors = registerErrors;
@@ -65,17 +100,24 @@ App.use((req, res, next) => {
     res.locals.LoginErrors = loginErrors;
     res.locals.hasLoginErrors = loginErrors.length > 0;
 
+    //Error for piblishing a post
+    res.locals.PublishErrors = publishErrors;
+    res.locals.hasPublishErrors = publishErrors.length > 0;
+
     next();
 })
 
 ////Set Routes to the APP/////////////////////
 App.use(LoginRouter);
+App.use(HomeRouter);
 ///////////////////////////////////////////////////
 
 ////////////////////////Entities Relationships//////////////////////////////////////////////////
 Publication.belongsTo(User, { constraint: true, onDelete: "CASCADE" });
 Comment.belongsTo(User, { constraint: true, onDelete: "CASCADE" });
+Comment.belongsTo(Publication, { constraint: true, onDelete: "CASCADE" });
 Reply.belongsTo(User, { constraint: true, onDelete: "CASCADE" });
+Reply.belongsTo(Comment, { constraint: true, onDelete: "CASCADE" });
 Request.belongsTo(User, { constraint: true, onDelete: "CASCADE" });
 
 User.hasMany(Publication);
@@ -86,7 +128,7 @@ User.hasMany(Request);
 
 
 /////////////////////Init ORM [CHECK CONSOLE FOR QUERIES]/////////////////////////////////////////
-sequelize.sync()
+sequelize.sync({ alter: true })
     .then(() => {
         App.listen(process.env.PORT, () => {
             console.log(`SERVER RUNNING ON PORT ${process.env.PORT}`);

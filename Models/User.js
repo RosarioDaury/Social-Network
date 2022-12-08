@@ -16,6 +16,18 @@ const User = sequelize.define('user', {
         type: Sequelize.STRING,
         allowNull: false,
     },
+    phone: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
+    photo: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
+    email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
     username: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -27,6 +39,14 @@ const User = sequelize.define('user', {
     friends: {
         type: Sequelize.JSON,
         allowNull: true,
+    },
+    status: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
+    confirmCode: {
+        type: Sequelize.STRING,
+        allowNull: true
     }
 })
 
