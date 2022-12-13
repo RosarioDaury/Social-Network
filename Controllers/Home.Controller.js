@@ -2,6 +2,8 @@ const Comment = require("../Models/Comment");
 const Publication = require("../Models/Publication");
 const Reply = require("../Models/Reply");
 const User = require("../Models/User");
+const Request = require("../Models/Request");
+
 
 
 exports.GetHomePage = (req, res) => {
@@ -13,21 +15,30 @@ exports.GetHomePage = (req, res) => {
             Comment.findAll({ include: [{ model: User }], order: [['createdAt', 'DESC']] })
                 .then(results => {
                     const comments = results.map(el => el.dataValues)
-                    console.log('comments', comments);
+                    // console.log('comments', comments);
 
                     Reply.findAll({ include: [{ model: User }], order: [['createdAt', 'ASC']] })
                         .then(results => {
                             const replies = results.map(el => el.dataValues);
 
-                            //Filter the comments and replies to be undes the right post and comments
-                            res.render('Home/Main',
-                                {
-                                    home: true,
-                                    publications,
-                                    comments,
-                                    replies,
-                                    user
+                            const { id } = user;
+                            Request.findAll({ where: { toId: id } })
+                                .then(requests => {
+                                    requests = requests.map(el => el.dataValues);
+                                    // console.log('notifications info', requests);
+                                    //Filter the comments and replies to be undes the right post and comments
+                                    res.render('Home/Main',
+                                        {
+                                            home: true,
+                                            publications,
+                                            comments,
+                                            replies,
+                                            user,
+                                            notifications: requests.length || 0
+                                        })
                                 })
+
+
                         })
                 })
 
@@ -66,6 +77,7 @@ exports.PostForPost = (req, res) => {
 
 exports.PostComment = (req, res) => {
     const { publication } = req.params;
+    const page = req.query.page;
     const userId = req.session.User.id;
     const { comment } = req.body;
 
@@ -77,7 +89,9 @@ exports.PostComment = (req, res) => {
         publicationId: Number(publication)
     })
         .then(result => {
-            console.log('RESULT', result);
+            // console.log('RESULT', result);
+            // console.log('PAGE', page);
+            if (page) return res.redirect('/friends');
             res.redirect('/');
         })
         .catch(err => {
@@ -89,6 +103,7 @@ exports.PostComment = (req, res) => {
 exports.PostReply = (req, res) => {
     const { comment } = req.params;
     const userId = req.session.User.id;
+    const page = req.query.page;
     const { reply } = req.body;
 
     if (!reply) return res.redirect('/');
@@ -99,7 +114,8 @@ exports.PostReply = (req, res) => {
         commentId: Number(comment)
     })
         .then(result => {
-            console.log('RESULT', result);
+            // console.log('RESULT', result);
+            if (page) return res.redirect('/friends');
             res.redirect('/');
         })
         .catch(err => {
@@ -110,14 +126,28 @@ exports.PostReply = (req, res) => {
 
 exports.DeletePost = (req, res) => {
     const { id } = req.params;
-    Publication.destroy({ where: { id: id } })
-        .then(result => {
-            res.redirect('/');
+    const userId = req.session.User.id;
+
+    Publication.findOne({ where: { id: id } })
+        .then(publication => {
+            publication = publication.dataValues;
+            if (userId !== publication.userId) return res.redirect('/');
+
+            Publication.destroy({ where: { id: id } })
+                .then(result => {
+                    res.redirect('/');
+                })
+                .catch(err => {
+                    console.log('[ERROR] DELETING POST', err);
+                    res.redirect('/');
+                })
         })
         .catch(err => {
-            console.log('[ERROR] DELETING POST', err);
-            res.redirect('/');
+            console.log(err);
+            res.redirect('/Home');
         })
+
+
 }
 
 exports.GetEditPost = (req, res) => {
@@ -140,25 +170,29 @@ exports.GetEditPost = (req, res) => {
 exports.PostEditPost = (req, res) => {
     const { id, userId, text } = req.body;
 
-    if (req.file) {
-        let path = req.file?.path ? req.file.path.split('\\') : null;
-        if (path) path = `${path[1]}/${path[2]}`;
-        // console.log('path', path);
-        Publication.update(
-            {
-                text,
-                image: path
-            },
-            {
-                where: { id: id }
-            })
-            .then(result => {
-                res.redirect('/Home')
-            })
-    } else {
-        Publication.findOne({ where: { id: id } })
-            .then(user => {
-                user = user.dataValues;
+
+    Publication.findOne({ where: { id: id }, include: [{ model: User }] })
+        .then(publication => {
+            publication = publication.dataValues;
+            if (userId !== publication.userId) return res.redirect('/');
+
+            if (req.file) {
+                let path = req.file?.path ? req.file.path.split('\\') : null;
+                if (path) path = `${path[1]}/${path[2]}`;
+                // console.log('path', path);
+                Publication.update(
+                    {
+                        text,
+                        image: path
+                    },
+                    {
+                        where: { id: id }
+                    })
+                    .then(result => {
+                        res.redirect('/Home')
+                    })
+            } else {
+
                 Publication.update(
                     {
                         text
@@ -168,10 +202,48 @@ exports.PostEditPost = (req, res) => {
                     })
                     .then(result => {
                         res.redirect('/Home')
+                    }).catch(err => {
+                        console.log(err);
                     })
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    }
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.redirect('/Home');
+        })
+
+    // if (req.file) {
+    //     let path = req.file?.path ? req.file.path.split('\\') : null;
+    //     if (path) path = `${path[1]}/${path[2]}`;
+    //     // console.log('path', path);
+    //     Publication.update(
+    //         {
+    //             text,
+    //             image: path
+    //         },
+    //         {
+    //             where: { id: id }
+    //         })
+    //         .then(result => {
+    //             res.redirect('/Home')
+    //         })
+    // } else {
+    //     Publication.findOne({ where: { id: id } })
+    //         .then(user => {
+    //             user = user.dataValues;
+    //             Publication.update(
+    //                 {
+    //                     text
+    //                 },
+    //                 {
+    //                     where: { id: id }
+    //                 })
+    //                 .then(result => {
+    //                     res.redirect('/Home')
+    //                 })
+    //         })
+    //         .catch(err => {
+    //             console.log(err);
+    //         })
+    // }
 }

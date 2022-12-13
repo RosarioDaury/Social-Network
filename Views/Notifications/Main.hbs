@@ -1,0 +1,61 @@
+<div style="width: 85%; margin: auto;">
+    <div class="d-flex flex-row justify-content-between">
+        <div class="d-flex flex-column" style="width: 27%; background: rgb(52, 73, 94, .8);">
+            <img src="{{user.photo}}" alt="profile" class="profile-photo">
+            <div class="text-center mt-5" style="color: white;">
+                <h4>{{user.firstName}} {{user.lastName}}</h4>
+                <p>{{user.username}}</p>
+                <p>{{user.email}}</p>
+                <p>{{user.phone}}</p>
+            </div>
+            
+        </div>
+        <div class="d-flex flex-column scrollable" style="width: 70%; height: 500px;  ">
+            <br>
+            <div class="container">
+                {{!-- {{#if hasPublishErrors}}
+                    {{#each PublishErrors}}
+                        <p class="text-danger text-center">{{this}}</p>
+                    {{/each}}
+                {{/if}} --}}
+
+                <div class="table-responsive">
+                    <table class="table">
+                        {{!-- <caption>Friends List</caption> --}}
+                        <thead>
+                            <tr>
+                            <th scope="col">Profile</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Username</th>
+                            <th></th>
+                            <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each requests}}
+                                <tr>
+                                    <th scope="row">
+                                        <img src="{{this.from.dataValues.photo}}" alt="profile" class="profile_photo_post">
+                                    </th>
+                                    <td>{{this.from.dataValues.firstName}}</td>
+                                    <td>{{this.from.dataValues.lastName}}</td>
+                                    <td>{{this.from.dataValues.username}}</td>
+                                    <td>
+                                        <a href="/accept/friend/{{this.id}}" class="btn btn-success">Accept</a>
+                                    </td>
+                                    <td>
+                                        <a href="/reject/friend/{{this.id}}" class="btn btn-danger">Reject</a>
+                                    </td>
+                                </tr>
+                            {{/each}}  
+                        </tbody>
+                    </table>
+                </div>
+            
+                <br>
+
+            </div>
+        </div>
+    </div>
+</div>

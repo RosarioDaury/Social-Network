@@ -37,7 +37,7 @@ const User = sequelize.define('user', {
         allowNull: false,
     },
     friends: {
-        type: Sequelize.JSON,
+        type: Sequelize.STRING,
         allowNull: true,
     },
     status: {

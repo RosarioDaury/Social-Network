@@ -1,17 +1,17 @@
 const sequelize = require("../Utils/Context");
 const Sequelize = require("sequelize");
 
-const Request = sequelize.define('request', {
+const Invitation = sequelize.define('invitation', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true,
     },
-    type: {
+    state: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
     },
 })
 
-module.exports = Request;
+module.exports = Invitation;

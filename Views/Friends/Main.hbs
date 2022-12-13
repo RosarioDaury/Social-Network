@@ -10,23 +10,63 @@
             </div>
             
         </div>
-        <div class="d-flex flex-column scrollable" style="width: 70%; height: 500px;  ">
+        <div class="d-flex flex-column scrollable" style="width: 70%; height: 500px;">
             <br>
             <div class="container">
-                {{#if hasPublishErrors}}
-                {{#each PublishErrors}}
-                    <p class="text-danger text-center">{{this}}</p>
-                {{/each}}
-            {{/if}}
-                <div class="form d-flex flex-column justify-content-center align-items-left">
-                    <form enctype="multipart/form-data" action="/post/post" method="post" class="d-flex flex-column justify-content-center align-items-left" style="color: white;">
-                        <h5 class="text-center" style="color: black;">Publish Something</h5>
-                        <textarea class="form-control" placeholder="Write Here your caption" name="text" rows="5"></textarea>
-                        <input type='file' class="form-control mb-1" name="image">
-                        <input type="submit"  class="btn btn-primary" value="Publish" style="width: 100%;">
+
+                {{#if hasFriendsErrors}}
+                    {{#each FriendsErrors}}
+                        <p class="text-danger text-center">{{this}}</p>
+                    {{/each}}
+                {{/if}}
+
+                {{#if hasFriendsSuccess}}
+                    {{#each FriendsSuccess}}
+                        <p class="text-success text-center">{{this}}</p>
+                    {{/each}}
+                {{/if}}
+
+                <div class="modal_friend hidden" id="modal">
+                    <form action="/post/friend/request" method="post" class="d-flex flex-column justify-content-center align-items-left" style="color: white;">
+                        <div class="d-flex flex-row justify-content-between">
+                            <h5 class="text-center" style="">Add a Friend</h5>
+                            <button class="btn btn-secondary mb-3" id="closeModal">Close</button>
+                        </div>
+                        <input type='text' class="form-control mb-1" name="friendsName" placeholder="Friend's Username...">
+                        <input type="submit"  class="btn btn-primary mt-3" value="Send Request" style="width: 100%;">
                     </form>
                 </div>
-                <br>
+                
+                <button id="addbtn" class="btn btn-secondary float-right mb-3">Add Friend</button>
+                <div class="table-responsive">
+                <table class="table">
+                    {{!-- <caption>Friends List</caption> --}}
+                    <thead>
+                        <tr>
+                        <th scope="col">Profile</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Username</th>
+                        <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each users}}
+                            <tr>
+                                <th scope="row">
+                                    <img src="{{this.photo}}" alt="profile" class="profile_photo_post">
+                                </th>
+                                <td>{{this.firstName}}</td>
+                                <td>{{this.lastName}}</td>
+                                <td>{{this.username}}</td>
+                                <td>
+                                    <a href="/delete/friend/{{this.id}}" class="btn btn-danger">Delete Friend</a>
+                                </td>
+                            </tr>
+                        {{/each}}  
+                    </tbody>
+                </table>
+                </div>
                 <br>
 
                 {{#each publications}}
@@ -38,11 +78,7 @@
                                     <p><b>{{this.user.dataValues.username}}</b></p>
                                     <p style="font-size: 10px;">{{this.createdAt}}</p>
                                 </div>
-                                
-                                <div style="margin-left: 8rem">
-                                    <a href="delete/post/{{this.id}}" class="btn btn-danger" >Delete</a>
-                                    <a href="edit/post/{{this.id}}" class="btn btn-secondary" >Edit</a>
-                                </div>
+                            
                             </div>
                             
                             <div style="padding: 5px; margin-left: 10px;">
@@ -57,7 +93,7 @@
                             </div>
 
                             <div class="add_comment">
-                                <form action="/post/comment/{{this.id}}" method="post" class="d-flex flex-row justify-content-center align-items-left ">
+                                <form action="/post/comment/{{this.id}}?page=friends" method="post" class="d-flex flex-row justify-content-center align-items-left ">
                                     <input type="text" class="form-control mr-2" name="comment" id="comment" placeholder="Write your comment">
                                     <input type="submit" class="btn btn-secondary" value="Comment">
                                 </form>
@@ -102,7 +138,7 @@
                                             {{/each}}
 
                                             <div class="add_comment">
-                                                <form action="/post/reply/{{this.id}}" method="post" class="d-flex flex-row float-right" style="width:80%;">
+                                                <form action="/post/reply/{{this.id}}?page=friends" method="post" class="d-flex flex-row float-right" style="width:80%;">
                                                     <input type="text" class="form-control mr-2" name="reply" id="reply" placeholder="Reply Here">
                                                     <input type="submit" class="btn btn-secondary" value="Reply">
                                                 </form>
@@ -124,10 +160,6 @@
                                     <p style="font-size: 10px;">{{this.createdAt}}</p>
                                 </div>
 
-                                 <div style="margin-left: 8rem">
-                                    <a href="delete/post/{{this.id}}" class="btn btn-danger" >Delete</a>
-                                    <a href="edit/post/{{this.id}}" class="btn btn-secondary" >Edit</a>
-                                </div>
                             </div>
                             <div class="text-public" >
                                 <h3>{{this.text}}</h3>
@@ -265,5 +297,18 @@
         </div>
     </div>
 </div>
+<script>
+    const button = document.getElementById('addbtn');
+    const buttonClose = document.getElementById('closeModal');
+    const modal = document.getElementById('modal');
+    console.log(button);
 
+    button.addEventListener('click', (e) => {
+        modal.classList.remove('hidden');
+    })
 
+    buttonClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        modal.classList.add('hidden');
+    })
+</script>

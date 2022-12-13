@@ -17,6 +17,9 @@ const Publication = require('./Models/Publication');
 const Comment = require('./Models/Comment');
 const Reply = require('./Models/Reply');
 const Request = require('./Models/Request');
+const Invitation = require('./Models/Invitation');
+const Event = require('./Models/Events');
+
 ////////////////////////////////////////////////////////////////////
 
 ////HBS Helpers
@@ -27,6 +30,10 @@ const IfEqual = require('./Utils/HbsHelpers/IfEqual');
 ///////////////////////////////Import Routers///////////////////////////////////////
 const LoginRouter = require('./Routes/Login.Routes');
 const HomeRouter = require('./Routes/Home.Routes');
+const FriendsRouter = require('./Routes/Friends.Routes');
+const NotificationsRouter = require('./Routes/Notifications.Routes');
+const EventsRouter = require('./Routes/Events.Routes');
+
 
 /////////////////////////////////ENVIROMENT VARIABLES//////////////////////////////////////
 require('dotenv').config();
@@ -84,8 +91,16 @@ App.set('views', 'views');
 
 App.use((req, res, next) => {
     const registerErrors = req.flash('RegisterErrors');
+
     const loginErrors = req.flash('LoginErrors');
-    const publishErrors = req.flash('PublishErrors')
+
+    const publishErrors = req.flash('PublishErrors');
+
+    const friendsErrors = req.flash('FriendsErrors');
+    const friendsSuccess = req.flash('FriendsSuccess');
+
+    const eventsErrors = req.flash('EventsErrors')
+
 
     res.locals.isAuth = req.session.isAuth;
     res.locals.User = req.session.User;
@@ -100,9 +115,21 @@ App.use((req, res, next) => {
     res.locals.LoginErrors = loginErrors;
     res.locals.hasLoginErrors = loginErrors.length > 0;
 
-    //Error for piblishing a post
+    //Error for publishing a post
     res.locals.PublishErrors = publishErrors;
     res.locals.hasPublishErrors = publishErrors.length > 0;
+
+    //Error for Friend's page a post
+    res.locals.FriendsErrors = friendsErrors;
+    res.locals.hasFriendsErrors = friendsErrors.length > 0;
+
+    //Success for Friend's page a post
+    res.locals.FriendsSuccess = friendsSuccess;
+    res.locals.hasFriendsSuccess = friendsSuccess.length > 0;
+
+    //Error for Event's page
+    res.locals.EventsErrors = eventsErrors;
+    res.locals.hasEventsErrors = eventsErrors.length > 0;
 
     next();
 })
@@ -110,25 +137,39 @@ App.use((req, res, next) => {
 ////Set Routes to the APP/////////////////////
 App.use(LoginRouter);
 App.use(HomeRouter);
+App.use(FriendsRouter);
+App.use(NotificationsRouter);
+App.use(EventsRouter);
 ///////////////////////////////////////////////////
 
 ////////////////////////Entities Relationships//////////////////////////////////////////////////
 Publication.belongsTo(User, { constraint: true, onDelete: "CASCADE" });
+
 Comment.belongsTo(User, { constraint: true, onDelete: "CASCADE" });
 Comment.belongsTo(Publication, { constraint: true, onDelete: "CASCADE" });
+
 Reply.belongsTo(User, { constraint: true, onDelete: "CASCADE" });
 Reply.belongsTo(Comment, { constraint: true, onDelete: "CASCADE" });
-Request.belongsTo(User, { constraint: true, onDelete: "CASCADE" });
+
+Request.belongsTo(User, { constraint: true, onDelete: "CASCADE", as: 'to', foreignKey: 'toId' });
+Request.belongsTo(User, { constraint: true, onDelete: "CASCADE", as: 'from', foreignKey: 'fromId' });
+
+Event.belongsTo(User, { constraint: true, onDelete: 'CASCADE' })
+
+Invitation.belongsTo(User, { constraint: true, onDelete: 'CASCADE' })
 
 User.hasMany(Publication);
 User.hasMany(Comment);
 User.hasMany(Reply);
 User.hasMany(Request);
+User.hasMany(Event);
+User.hasMany(Invitation);
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////Init ORM [CHECK CONSOLE FOR QUERIES]/////////////////////////////////////////
-sequelize.sync({ alter: true })
+sequelize.sync()
     .then(() => {
         App.listen(process.env.PORT, () => {
             console.log(`SERVER RUNNING ON PORT ${process.env.PORT}`);

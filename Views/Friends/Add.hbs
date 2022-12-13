@@ -1,0 +1,29 @@
+            <div class="table-responsive" style="width: 85%; margin: auto;">
+                <table class="table">
+                    {{!-- <caption>Friends List</caption> --}}
+                    <thead>
+                        <tr>
+                        <th scope="col">Profile</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Username</th>
+                        <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each users}}
+                            <tr>
+                                <th scope="row">
+                                    <img src="{{this.photo}}" alt="profile" class="profile_photo_post">
+                                </th>
+                                <td>{{this.firstName}}</td>
+                                <td>{{this.lastName}}</td>
+                                <td>{{this.username}}</td>
+                                <td>
+                                    <a href="/post/addfriend/{{this.id}}" class="btn btn-primary">Add Friend</a>
+                                </td>
+                            </tr>
+                        {{/each}}  
+                    </tbody>
+                </table>
+            </div>

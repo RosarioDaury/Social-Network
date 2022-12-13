@@ -156,3 +156,23 @@ textarea::placeholder{
     margin: 10px auto;
 }
 
+
+.modal_friend{
+    z-index: 1; 
+    position: absolute; 
+    width: 710px; 
+    background: gray; 
+    padding: 15px; 
+    /* visibility: hidden; */
+    transition: opacity .3s ease-in-out;
+}
+
+.hidden{
+    visibility: hidden;
+    opacity: 0;
+}
+
+.visible{
+    visibility: visible;
+    opacity: 1;
+}
