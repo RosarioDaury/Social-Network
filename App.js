@@ -25,6 +25,10 @@ const Event = require('./Models/Events');
 ////HBS Helpers
 const HasPhoto = require('./Utils/HbsHelpers/HasPhoto');
 const IfEqual = require('./Utils/HbsHelpers/IfEqual');
+const CountInvitations = require('./Utils/HbsHelpers/CountInvitations');
+const FormatDate = require('./Utils/HbsHelpers/FormatDate');
+const CompareDate = require('./Utils/HbsHelpers/CompareDates');
+const CompareString = require('./Utils/HbsHelpers/CompareString');
 
 
 ///////////////////////////////Import Routers///////////////////////////////////////
@@ -52,6 +56,10 @@ App.engine('hbs', handlebars.engine({
     helpers: {
         HasPhoto,
         IfEqual,
+        CountInvitations,
+        FormatDate,
+        CompareDate,
+        CompareString,
     }
 }));
 
@@ -101,6 +109,8 @@ App.use((req, res, next) => {
 
     const eventsErrors = req.flash('EventsErrors')
 
+    const inviteErrors = req.flash('InviteErrors');
+
 
     res.locals.isAuth = req.session.isAuth;
     res.locals.User = req.session.User;
@@ -131,6 +141,10 @@ App.use((req, res, next) => {
     res.locals.EventsErrors = eventsErrors;
     res.locals.hasEventsErrors = eventsErrors.length > 0;
 
+    //Error for Event's page
+    res.locals.InviteErrors = inviteErrors;
+    res.locals.hasInviteErrors = inviteErrors.length > 0;
+
     next();
 })
 
@@ -157,6 +171,8 @@ Request.belongsTo(User, { constraint: true, onDelete: "CASCADE", as: 'from', for
 Event.belongsTo(User, { constraint: true, onDelete: 'CASCADE' })
 
 Invitation.belongsTo(User, { constraint: true, onDelete: 'CASCADE' })
+Invitation.belongsTo(Event, { constraint: true, onDelete: 'CASCADE' })
+
 
 User.hasMany(Publication);
 User.hasMany(Comment);

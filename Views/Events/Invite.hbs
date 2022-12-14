@@ -1,0 +1,50 @@
+<div style="width: 85%; margin: auto;">
+    <div class="d-flex flex-row justify-content-between">
+        <div class="d-flex flex-column" style="width: 27%; background: rgb(52, 73, 94, .8);">
+            <img src="{{user.photo}}" alt="profile" class="profile-photo">
+            <div class="text-center mt-5" style="color: white;">
+                <h4>{{user.firstName}} {{user.lastName}}</h4>
+                <p>{{user.username}}</p>
+                <p>{{user.email}}</p>
+                <p>{{user.phone}}</p>
+            </div>
+            
+        </div>
+        <div class="d-flex flex-column scrollable" style="width: 70%; height: 500px;  ">
+            <br>
+
+            {{#if hasInviteErrors}}
+                {{#each InviteErrors}}
+                    <p class="text-danger text-center">{{this}}</p>
+                {{/each}}
+            {{/if}}
+
+            <div id="modal">
+                    <form action="/post/invite/event" method="post" class="d-flex flex-column justify-content-center align-items-left" style="color: white;">
+                        <div class="d-flex flex-row justify-content-between">
+                            <h5 class="text-center" style="">Invite a friend to "{{eventData.name}}"</h5>
+                        </div>
+                        <input type="hidden" name="eventId" value="{{eventData.id}}">
+                        <input type='text' class="form-control mb-1" name="username" placeholder="Username" required>
+                        <input type="submit"  class="btn btn-primary mt-3" value="Invite a friend" style="width: 100%;">
+                    </form>
+            </div>
+
+    </div>
+</div>
+
+<script>
+    const button = document.getElementById('addbtn');
+    const buttonClose = document.getElementById('closeModal');
+    const modal = document.getElementById('modal');
+    console.log(button);
+
+    button.addEventListener('click', (e) => {
+        modal.classList.remove('hidden');
+    })
+
+    buttonClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        modal.classList.add('hidden');
+    })
+</script>

@@ -18,7 +18,7 @@
                   <a class="nav-link {{#if invits}} {{else}} active {{/if}}" href="/Events">Your Events</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link {{#if invits}} active {{/if}}" href="/Events?invitations=true">Invitation</a>
+                  <a class="nav-link {{#if invits}} active {{/if}}" href="/Events?invits=true">Invitation</a>
                 </li>
               </ul>
             <br>
@@ -42,9 +42,14 @@
                     </form>
             </div>
 
-            <div class="float-right mb-3">
-              <button id="addbtn" class="btn btn-primary">Create Event</button>
-            </div>
+
+            {{#if invits}}
+            {{else}}
+                 <div class="float-right mb-3">
+                    <button id="addbtn" class="btn btn-primary">Create Event</button>
+                </div>
+            {{/if}}
+           
 
             <div class="table-responsive">
                     <table class="table">
@@ -55,27 +60,78 @@
                               <th scope="col">Date</th>
                               <th scope="col">Is Done?</th>
                               <th scope="col">Location</th>
+                            {{#if invits}}
+
+                            {{else}}
                               <th scope="col">Guests</th>
-                              <th></th>
+                            {{/if}}
                               <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {{#each events}}
-                                <tr>
-                                    <td>{{this.name}}</td>
-                                    <td>{{this.date}}</td>
-                                    <td>No</td>
-                                    <td>{{this.location}}</td>
-                                    <td>0</td>
-                                    <td>
-                                        <a href="/accept/friend/{{this.id}}" class="btn btn-success">Invite</a>
-                                    </td>
-                                    <td>
-                                        <a href="/reject/friend/{{this.id}}" class="btn btn-danger">Delete</a>
-                                    </td>
-                                </tr>
-                            {{/each}}  
+                            {{#if invits}}
+
+                                {{#each events}}
+                                    <tr>
+                                        <td>{{this.event.dataValues.name}}</td>
+                                        <td>{{FormatDate this.event.dataValues.date}}</td>
+                                        <td>
+                                            {{#if (CompareDate this.event.dataValues.date)}}
+                                                Available
+                                            {{else}}
+                                                Finished
+                                            {{/if}}
+                                        </td>
+                                        <td>{{this.event.dataValues.location}}</td>
+                                        <td class="d-flex flex-column">
+                                            <a 
+                                            href="/accept/invitation/{{this.id}}" 
+                                            class="btn btn-success 
+                                            {{#if (CompareDate this.event.dataValues.date)}}{{else}} disabled {{/if}} 
+                                            {{#if (CompareString this.state 'Accepted')}} disabled {{/if}}">Yes</a>
+
+                                            <a 
+                                            href="/maybe/invitation/{{this.id}}"
+                                             class="btn btn-danger {{#if (CompareDate this.event.dataValues.date)}}{{else}} disabled {{/if}}
+                                             {{#if (CompareString this.state 'Maybe')}} disabled {{/if}}">Maybe</a>
+
+                                            <a 
+                                            href="/reject/invitation/{{this.id}}" 
+                                            class="btn btn-danger {{#if (CompareDate this.event.dataValues.date)}}{{else}} disabled {{/if}}
+                                            {{#if (CompareString this.state 'Rejected')}} disabled {{/if}}">Not</a>
+                                        </d>
+                                    </tr>
+                                {{/each}}  
+
+                            {{else}}
+
+                                {{#each events}}
+                                    <tr>
+                                        <td>{{this.name}}</td>
+                                        <td>{{FormatDate this.date}}</td>
+                                        <td>
+                                            {{#if (CompareDate this.date)}}
+                                                Available
+                                            {{else}}
+                                                Finished
+                                            {{/if}}
+                                        </td>
+                                        <td>{{this.location}}</td>
+                                        <td>{{CountInvitations this ../invitations}}</td>
+                                        <td class="d-flex flex-column">
+                                            <a href="/invite/event/{{this.id}}" class="btn btn-success {{#if (CompareDate this.date)}}{{else}} disabled {{/if}}"  >Invite</a>
+        
+                                            <a href="/delete/event/{{this.id}}" class="btn 
+                                            btn-danger">Delete</a>
+
+                                            <a href="/guests/list/{{this.id}}" class="btn 
+                                            btn-secondary" >Guests List</a>
+                                        </td>
+                                    </tr>
+                                {{/each}}  
+
+                            {{/if}}
+                            
                         </tbody>
                     </table>
                 </div>

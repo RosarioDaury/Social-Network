@@ -1,0 +1,49 @@
+<div style="width: 85%; margin: auto;">
+    <div class="d-flex flex-row justify-content-between">
+        <div class="d-flex flex-column" style="width: 27%; background: rgb(52, 73, 94, .8);">
+            <img src="{{user.photo}}" alt="profile" class="profile-photo">
+            <div class="text-center mt-5" style="color: white;">
+                <h4>{{user.firstName}} {{user.lastName}}</h4>
+                <p>{{user.username}}</p>
+                <p>{{user.email}}</p>
+                <p>{{user.phone}}</p>
+            </div>
+            
+        </div>
+        <div class="d-flex flex-column scrollable" style="width: 70%; height: 500px;  ">
+            <br>
+            <br>
+
+            {{#if hasEventsErrors}}
+                {{#each EventsErrors}}
+                    <p class="text-danger text-center">{{this}}</p>
+                {{/each}}
+            {{/if}}
+
+            <div class="table-responsive">
+                    <table class="table">
+                        {{!-- <caption>Friends List</caption> --}}
+                        <thead>
+                            <tr>
+                              <th scope="col">Name</th>
+                              <th scope="col">Response</th>
+                              <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                {{#each invitations}}
+                                    <tr>
+                                        <td>{{this.user.dataValues.username}}</td>
+                                        <td>{{this.state}}</td>
+                                        <td>
+                                            <a href="/delete/invitation/{{this.id}}" class="btn btn-danger">Delete</a>
+                                        </td>
+                                    </tr>
+                                {{/each}}
+                            
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+    </div>
+</div>

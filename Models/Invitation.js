@@ -10,7 +10,7 @@ const Invitation = sequelize.define('invitation', {
     },
     state: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
     },
 })
 
