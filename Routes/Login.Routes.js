@@ -1,9 +1,10 @@
 const Router = require('express').Router();
 const Controller = require('../Controllers/Login.Controller');
+const IsNotAuth = require('../Utils/Middleware/IsNotAuth');
 
 //All get routes for Login
 Router.get('/', Controller.GetLoginPage);
-Router.get('/login', Controller.LoginPage);
+Router.get('/login', IsNotAuth, Controller.LoginPage);
 Router.get('/register', Controller.GetRegisterPage);
 Router.get('/forgotpassword', Controller.GetForgotPasswordPage);
 

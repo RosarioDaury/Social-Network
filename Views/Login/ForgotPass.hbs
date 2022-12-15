@@ -1,11 +1,16 @@
 <div class="container">
     <div class="form d-flex flex-column justify-content-center align-items-center">
+        {{#if hasForgotPasswordErrors}}
+                    {{#each ForgotPasswordErrors}}
+                        <p class="text-danger text-center">{{this}}</p>
+                    {{/each}}
+        {{/if}}
         <form action="/post/forgotpassword" method="post" class="d-flex flex-column justify-content-center align-items-center" style="width: 40%;">
             <h3>Forgot Password</h3>
             <br>
             <br>
-            <p>Enter your Email to send your new password</p>
-            <input type="email" class="form-control mb-4" placeholder="Email" name="email">
+            <p>Enter your Username to send your new password</p>
+            <input type="text" class="form-control mb-4" placeholder="Username" name="username">
             <input type="submit"  class="btn btn-success mb-2" value="Reset Password">
             <a href='/login' class="btn btn-primary button">Back to Login</a>
         </form>

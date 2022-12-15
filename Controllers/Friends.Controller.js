@@ -44,7 +44,8 @@ exports.GetFriendsPage = (req, res) => {
                                                     replies,
                                                     home: true,
                                                     users,
-                                                    notifications: requests.length || 0
+                                                    notifications: requests.length || 0,
+                                                    friendsPage: true
                                                 }
                                             )
                                         })

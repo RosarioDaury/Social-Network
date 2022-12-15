@@ -102,6 +102,8 @@ App.use((req, res, next) => {
 
     const loginErrors = req.flash('LoginErrors');
 
+    const ForgotPasswordErrors = req.flash('ForgotPasswordErrors')
+
     const publishErrors = req.flash('PublishErrors');
 
     const friendsErrors = req.flash('FriendsErrors');
@@ -124,6 +126,10 @@ App.use((req, res, next) => {
     //Error for Login Page
     res.locals.LoginErrors = loginErrors;
     res.locals.hasLoginErrors = loginErrors.length > 0;
+
+    //Error for Login Page
+    res.locals.ForgotPasswordErrors = ForgotPasswordErrors;
+    res.locals.hasForgotPasswordErrors = ForgotPasswordErrors.length > 0;
 
     //Error for publishing a post
     res.locals.PublishErrors = publishErrors;

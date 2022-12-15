@@ -29,6 +29,7 @@ exports.GetEventsPage = (req, res) => {
                             notifications: requests.length || 0,
                             invits: true,
                             events,
+                            eventPage: true
                         })
 
                     })
@@ -55,7 +56,8 @@ exports.GetEventsPage = (req, res) => {
                                     notifications: requests.length || 0,
                                     invits: false,
                                     events,
-                                    invitations
+                                    invitations,
+                                    eventPage: true
                                 })
                             })
 
@@ -84,7 +86,8 @@ exports.PostCreateEvent = (req, res) => {
 
 
     if (date <= today) {
-        console.log('DATE ERROR');
+        req.flash('EventsErrors', 'Cannot create an event for a date already passed');
+        return res.redirect('/events')
     }
 
     Events.create({
@@ -129,7 +132,8 @@ exports.GetInvitePage = (req, res) => {
                         home: true,
                         user,
                         eventData,
-                        notifications: requests.length || 0
+                        notifications: requests.length || 0,
+                        eventPage: true
                     });
 
                 })
@@ -189,6 +193,7 @@ exports.GetGuestList = (req, res) => {
                         user,
                         notifications: requests.length || 0,
                         invitations,
+                        eventPage: true
                     })
 
                 })

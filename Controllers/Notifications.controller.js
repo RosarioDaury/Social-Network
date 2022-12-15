@@ -8,7 +8,7 @@ exports.GetRequestsPage = (req, res) => {
         .then(requests => {
             requests = requests.map(el => el.dataValues);
             // console.log('notifications info', requests);
-            res.render('Notifications/Main', { home: true, user, requests, notifications: requests.length || 0 })
+            res.render('Notifications/Main', { home: true, user, requests, notifications: requests.length || 0, notificationsPage: true })
         })
 }
 

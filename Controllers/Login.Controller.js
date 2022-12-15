@@ -66,6 +66,12 @@ exports.PostRegisterPage = (req, res) => {
     if (path) path = `${path[1]}/${path[2]}`;
     const PhoneRegex = /^\d{3}-\d{3}-\d{4}$/;
 
+    if (!firstName || !lastName || !username || !email || !phone || !password || !password1 || !path) {
+        console.log('HERE LOGGER')
+        req.flash('RegisterErrors', 'All fields are required');
+        return res.redirect('/register');
+    }
+
     if (password != password1) {
         req.flash('RegisterErrors', 'Passwords do not match');
         return res.redirect('/register');
@@ -76,44 +82,56 @@ exports.PostRegisterPage = (req, res) => {
         return res.redirect('/register');
     }
 
+
+
     //Encrypting Password Before saving
     const passToSave = bcrypt.hashSync(password, 10);
     const confirmCode = uuidv4();
     // console.log(passToSave, 'password');
 
-    User.create({
-        firstName,
-        lastName,
-        username,
-        email,
-        phone,
-        photo: '/' + path,
-        password: passToSave,
-        status: false,
-        confirmCode
-    })
-        .then(result => {
-            console.log('result', result);
+    User.findOne({ where: { username: username } })
+        .then(exist => {
+            if (!exist) {
+                User.create({
+                    firstName,
+                    lastName,
+                    username,
+                    email,
+                    phone,
+                    photo: '/' + path,
+                    password: passToSave,
+                    status: false,
+                    confirmCode
+                })
+                    .then(result => {
+                        // console.log('result', result);
 
-            const mailOptions = {
-                from: 'sender@email.com',
-                to: email,
-                subject: `Password Reset`,
-                html: `<p>Hi ${result.dataValues.firstName}, Activate you account from here <a href='http://localhost:3000/confirmAccount/${confirmCode}'>CLICK HERE</a></p>`
-            };
-            // transporter.sendMail()
-            transporter.sendMail(mailOptions, function (err, info) {
-                if (err)
-                    console.log(err)
-                else
-                    res.redirect('/login');
-            });
-            res.redirect('/login');
+                        const mailOptions = {
+                            from: 'sender@email.com',
+                            to: email,
+                            subject: `Password Reset`,
+                            html: `<p>Hi ${result.dataValues.firstName}, Activate you account from here <a href='http://localhost:3000/confirmAccount/${confirmCode}'>CLICK HERE</a></p>`
+                        };
+                        // transporter.sendMail()
+                        transporter.sendMail(mailOptions, function (err, info) {
+                            if (err)
+                                console.log(err)
+                            else
+                                res.redirect('/login');
+                        });
+                        res.redirect('/login');
+                    })
+                    .catch(err => {
+                        console.log('[CREATE USER ERROR]', err);
+                        res.redirect('/register');
+                    })
+            } else {
+                req.flash('RegisterErrors', 'Username is already in use, try another one');
+                return res.redirect('/register');
+            }
         })
-        .catch(err => {
-            console.log('[CREATE USER ERROR]', err);
-            res.redirect('/register');
-        })
+
+
 
 
 }
@@ -130,15 +148,15 @@ exports.PostForgotPasswordPage = (req, res) => {
         .then(user => {
             //If the email do not correspond to any user
             if (!user) {
-                req.flash('ForgetPasswordErrors', 'This Username is not related with no User');
+                req.flash('ForgotPasswordErrors', 'This Username is not related with no User');
                 return res.redirect('/forgotpassword');
             }
 
             user = user.dataValues;
             const newPass = GeneratePassword();
             const passwordToSave = bcrypt.hashSync(newPass, 10);
-            const { firstName, lastName, username, email, phone, photo, password } = user;
-            console.log(user);
+            const { id, firstName, lastName, username, email, phone, photo, password } = user;
+
 
             User.update(
                 {

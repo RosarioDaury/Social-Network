@@ -1,16 +1,29 @@
-<div style="width: 85%; margin: auto;">
+<div style="width: 98%; margin: auto;">
     <div class="d-flex flex-row justify-content-between">
-        <div class="d-flex flex-column" style="width: 27%; background: rgb(52, 73, 94, .8);">
-            <img src="{{user.photo}}" alt="profile" class="profile-photo">
-            <div class="text-center mt-5" style="color: white;">
-                <h4>{{user.firstName}} {{user.lastName}}</h4>
-                <p>{{user.username}}</p>
-                <p>{{user.email}}</p>
-                <p>{{user.phone}}</p>
+        <div class="d-flex flex-column" style="width: 30%;">
+            <div class="text-center mt-5" style="color: black; margin: auto; width: 100%;">
+                <div class="d-flex flex-row justify-content-evenly align-items-center p-4 item">
+                    <div style="width: 40%;">
+                        <img src="{{user.photo}}" alt="icon" class="profile-photo">
+                    </div>
+                    <div style="width: 50%;">
+                        <h4>{{user.firstName}} {{user.lastName}}</h4>
+                        <p>{{user.username}}</p>
+                        
+                    </div>   
+                </div>
+
+                <br>
+
+                <div class="d-flex flex-column justify-content-evenly align-items-center p-4 item">
+                    <p>{{user.email}}</p>
+                    <p>{{user.phone}}</p>
+                </div>
+                
             </div>
-            
         </div>
-        <div class="d-flex flex-column scrollable" style="width: 70%; height: 500px;  ">
+
+        <div class="d-flex flex-column" style="width: 68%; height: auto;">
             <br>
             <div class="container">
                 {{#if hasPublishErrors}}
@@ -18,12 +31,14 @@
                     <p class="text-danger text-center">{{this}}</p>
                 {{/each}}
             {{/if}}
-                <div class="form d-flex flex-column justify-content-center align-items-left">
-                    <form enctype="multipart/form-data" action="/post/post" method="post" class="d-flex flex-column justify-content-center align-items-left" style="color: white;">
+                <div class="form d-flex flex-column justify-content-center align-items-left" style="width: 80%; margin: auto;">
+                    <form enctype="multipart/form-data" action="/post/post" method="post" class="d-flex flex-column justify-content-center align-items-left">
                         <h5 class="text-center" style="color: black;">Publish Something</h5>
-                        <textarea class="form-control" placeholder="Write Here your caption" name="text" rows="5"></textarea>
                         <input type='file' class="form-control mb-1" name="image">
-                        <input type="submit"  class="btn btn-primary" value="Publish" style="width: 100%;">
+                        <textarea class="form-control" placeholder="Write Here your caption" name="text" rows="3"></textarea>
+                        <div>
+                            <input type="submit"  class="btn btn-primary mt-1 float-right" value="Publish" >
+                        </div>
                     </form>
                 </div>
                 <br>
@@ -32,14 +47,17 @@
                 {{#each publications}}
                     {{#if (HasPhoto this)}}
                         <div class="d-flex flex-column post-container-justText">
-                            <div class="d-flex flex-row justify-content-start post-header">
-                                <img src="{{this.user.dataValues.photo}}" alt="profile" class="profile_photo_post">
-                                <div>
-                                    <p><b>{{this.user.dataValues.username}}</b></p>
-                                    <p style="font-size: 10px;">{{this.createdAt}}</p>
+                            <div class="d-flex flex-row justify-content-between post-header">
+                                <div class="d-flex flex-row">
+                                    <img src="{{this.user.dataValues.photo}}" alt="profile" class="profile_photo_post">
+                                    <div>
+                                        <p><b>{{this.user.dataValues.username}}</b></p>
+                                        <p style="font-size: 10px;">{{this.createdAt}}</p>
+                                    </div>
+
                                 </div>
                                 
-                                <div style="margin-left: 8rem">
+                                <div>
                                     <a href="delete/post/{{this.id}}" class="btn btn-danger" >Delete</a>
                                     <a href="edit/post/{{this.id}}" class="btn btn-secondary" >Edit</a>
                                 </div>
@@ -58,7 +76,7 @@
 
                             <div class="add_comment">
                                 <form action="/post/comment/{{this.id}}" method="post" class="d-flex flex-row justify-content-center align-items-left ">
-                                    <input type="text" class="form-control mr-2" name="comment" id="comment" placeholder="Write your comment">
+                                    <input type="text" class="form-control" name="comment" id="comment" placeholder="Write your comment">
                                     <input type="submit" class="btn btn-secondary" value="Comment">
                                 </form>
                             </div>
@@ -117,14 +135,17 @@
                         <br>
                     {{else}}
                         <div class="d-flex flex-column post-container-justText">
-                            <div class="d-flex flex-row justify-content-start post-header">
-                                <img src="{{this.user.dataValues.photo}}" alt="profile" class="profile_photo_post">
-                                <div>
-                                    <p><b>{{this.user.dataValues.username}}</b></p>
-                                    <p style="font-size: 10px;">{{this.createdAt}}</p>
+                            <div class="d-flex flex-row justify-content-between post-header">
+                                <div class="d-flex flex-row">
+                                    <img src="{{this.user.dataValues.photo}}" alt="profile" class="profile_photo_post">
+                                    <div>
+                                        <p><b>{{this.user.dataValues.username}}</b></p>
+                                        <p style="font-size: 10px;">{{this.createdAt}}</p>
+                                    </div>
+
                                 </div>
 
-                                 <div style="margin-left: 8rem">
+                                 <div>
                                     <a href="delete/post/{{this.id}}" class="btn btn-danger" >Delete</a>
                                     <a href="edit/post/{{this.id}}" class="btn btn-secondary" >Edit</a>
                                 </div>
@@ -136,7 +157,7 @@
 
                             <div class="add_comment">
                                 <form action="/post/comment/{{this.id}}" method="post" class="d-flex flex-row justify-content-center align-items-left ">
-                                    <input type="text" class="form-control mr-2" name="comment" id="comment" placeholder="Write your comment">
+                                    <input type="text" class="form-control" name="comment" id="comment" placeholder="Write your comment">
                                     <input type="submit" class="btn btn-secondary" value="Comment">
                                 </form>
                             </div>
@@ -198,66 +219,6 @@
                
                 <br>
 
-                {{!-- Post card when there is photo --}}
-                {{!-- <div class="d-flex flex-column post-container">
-                    <div class="d-flex flex-row justify-content-start post-header">
-                        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" class="profile_photo_post">
-                        <div>
-                            <p><b>User name</b></p>
-                            <p>Date</p>
-                        </div>
-                    </div>
-
-                    <div style="padding: 5px;">
-                        <p>
-                            This is the text of the comment, right here
-                            and what if i just put more and more and more text idk
-                        </p>
-                    </div>
-
-                    <div class="post_image">
-                        <img src="https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg" alt="photo">
-                    </div>
-
-                    <div class="add_comment">
-                        <form action="" class="d-flex flex-row justify-content-center align-items-left ">
-                            <input type="text" class="form-control mr-2" name="comment" id="comment" placeholder="Write your comment">
-                            <input type="submit" class="btn btn-secondary" value="Comment">
-                        </form>
-                    </div>
-
-                    <div class="scrollable all_comments">
-                        <div class="d-flex flex-row justify-content-start comment">
-                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" class="profile_photo_post mt-3" style="margin-right: 10px;">
-                            <div>
-                                <p><b>User name</b></p>
-                                <p>
-                                    This is the text of the comment, right here
-                                    and what if i just put more and more and more text idk
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="add_comment">
-                                    <div class="d-flex flex-row float-right comment" style="width:80%;">
-                                        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="profile" class="profile_photo_post mt-3" style="margin-right: 10px;">
-                                        <div>
-                                            <p><b>User name</b></p>
-                                            <p>
-                                                This is the text of the comment, right here
-                                                and what if i just put more and more and more text idk
-                                            </p>
-                                        </div>
-                                    </div>
-                                    
-                                    <form action="" class="d-flex flex-row float-right" style="width:80%;">
-                                        <input type="text" class="form-control mr-2" name="comment" id="comment" placeholder="Reply Here">
-                                        <input type="submit" class="btn btn-secondary" value="Comment">
-                                    </form>
-                                </div>
-
-                    </div>
-                </div>  --}}
                 <br>
                 <br>
 

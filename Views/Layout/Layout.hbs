@@ -5,28 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     {{#if login}}<link rel="stylesheet" href="/CSS/Login.styles.css">{{/if}}
-    <link rel="stylesheet" href="/CSS/Home.styles.css">
+    {{#if home}}<link rel="stylesheet" href="/CSS/Home.styles.css">{{/if}}
     {{#if edit}}<link rel="stylesheet" href="/CSS/Edit.styles.css">{{/if}}
     <title>Social Network</title>
   </head>
 
   <body>
     {{#if home}}
-      <div style="width: 85%; margin: auto;">
-        <nav class="navbar bg-color">
-            <div class="container-fluid" style="color: white;">
-                <h3><a href="/">The Social Network</a></h3>
-                <div class="d-flex justify-content-between" style="width: 40%;">
-                    <a href="/friends" class="btn btn-primary">Friends</a>
-                    <a href="/notifications" class="btn btn-primary">Notifications [{{notifications}}]</a>
-                    <a href="/events" class="btn btn-primary">Events</a>
-                    <a href="/logout" class="btn btn-danger">LogOut</a>
+      <div style="margin-bottom: 5px;" class="header" >
+        <nav class="navbar bg-color" >
+            <div class="container-fluid">
+                <h3><a href="/" style="color: black;">The Social Network</a></h3>
+                <div class="d-flex justify-content-between align-items-center navbar-options">
+                    <a href="/friends" class="btn {{#if friendsPage}}disabled {{/if}}">Friends</a>
+                    <a href="/notifications" class="btn {{#if notificationsPage}}disabled {{/if}}">Notifications ({{notifications}})</a>
+                    <a href="/events" class="btn {{#if eventPage}} disabled {{/if}}">Events</a>
+                    <a href="/logout" class="btn" style="color: red">Logout</a>
                 </div>
             </div>
         </nav>
-    </div>  
+    </div> 
+     
     {{/if}}
-
     {{{body}}}
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

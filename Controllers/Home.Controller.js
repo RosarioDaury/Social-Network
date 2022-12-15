@@ -34,7 +34,8 @@ exports.GetHomePage = (req, res) => {
                                             comments,
                                             replies,
                                             user,
-                                            notifications: requests.length || 0
+                                            notifications: requests.length || 0,
+                                            homePage: true,
                                         })
                                 })
 
@@ -159,7 +160,7 @@ exports.GetEditPost = (req, res) => {
             publication = publication.dataValues;
             if (userId !== publication.userId) return res.redirect('/');
 
-            res.render('Home/Edit', { publication, edit: true })
+            res.render('Home/Edit', { publication, edit: true, })
         })
         .catch(err => {
             console.log(err);
